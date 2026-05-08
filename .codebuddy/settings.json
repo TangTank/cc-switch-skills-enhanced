@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "javascript-typescript@codebuddy-plugins-official": true,
+    "web-artifacts-builder@codebuddy-plugins-official": true
+  }
+}
