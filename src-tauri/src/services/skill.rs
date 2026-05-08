@@ -1639,7 +1639,58 @@ impl SkillService {
         Self::sync_to_app_dir(directory, app)
     }
 
-    /// 删除路径（支持 symlink 和真实目录）
+    /// 同步 skill 到任意目标目录（供项目维度 Skills 使用）
+    ///
+    /// `directory`: skill 在 SSOT 中的目录名（非完整路径）
+    /// `target_parent`: 目标父目录（如 `<project>/.claude/skills/`）
+    pub fn sync_to_custom_dir(directory: &str, target_parent: &std::path::Path) -> Result<()> {
+        let ssot_dir = Self::get_ssot_dir()?;
+        let source = ssot_dir.join(directory);
+
+        if !source.exists() {
+            return Err(anyhow!("Skill 不存在于 SSOT: {directory}"));
+        }
+
+        let dest = target_parent.join(directory);
+
+        // 如果已存在则先删除
+        if dest.exists() || Self::is_symlink(&dest) {
+            Self::remove_path(&dest)?;
+        }
+
+        let sync_method = Self::get_sync_method();
+        match sync_method {
+            SyncMethod::Auto => {
+                match Self::create_symlink(&source, &dest) {
+                    Ok(()) => {
+                        log::debug!("Project skill {directory} 已通过 symlink 同步到 {}", dest.display());
+                        return Ok(());
+                    }
+                    Err(err) => {
+                        log::warn!("Project skill symlink 失败，回退到复制: {err:#}");
+                    }
+                }
+                Self::copy_dir_recursive(&source, &dest)?;
+            }
+            SyncMethod::Symlink => {
+                Self::create_symlink(&source, &dest)?;
+            }
+            SyncMethod::Copy => {
+                Self::copy_dir_recursive(&source, &dest)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// 公开的 is_symlink 方法（供命令层使用）
+    pub fn is_symlink_pub(path: &std::path::Path) -> bool {
+        Self::is_symlink(path)
+    }
+
+    /// 公开的路径删除方法（供命令层使用）
+    pub fn remove_from_dir_pub(path: &std::path::Path) -> Result<()> {
+        Self::remove_path(path)
+    }
     fn remove_path(path: &Path) -> Result<()> {
         if Self::is_symlink(path) {
             // 符号链接：仅删除链接本身，不影响源文件

@@ -39,6 +39,7 @@ pub use commands::open_provider_terminal;
 pub use commands::*;
 pub use config::{get_claude_mcp_path, get_claude_settings_path, read_json_file};
 pub use database::Database;
+pub use database::dao::projects::Project;
 pub use deeplink::{import_provider_from_deeplink, parse_deeplink_url, DeepLinkImportRequest};
 pub use error::AppError;
 pub use mcp::{
@@ -1161,6 +1162,15 @@ pub fn run() {
             commands::check_env_conflicts,
             commands::delete_env_vars,
             commands::restore_env_backup,
+            // Project Skills management
+            commands::get_projects,
+            commands::add_project,
+            commands::update_project,
+            commands::delete_project,
+            commands::get_project_skill_apps,
+            commands::apply_skill_to_project,
+            commands::remove_skill_from_project,
+            commands::list_dot_directories,
             // Skill management (v3.10.0+ unified)
             commands::get_installed_skills,
             commands::get_skill_backups,
