@@ -1788,6 +1788,9 @@
     "updateAll": "全部更新 ({{count}})",
     "updatingAll": "更新中...",
     "updateAllSuccess": "已成功更新 {{count}} 个技能",
+    "searchPlaceholder": "搜索技能...",
+    "noResults": "未找到匹配的技能",
+    "noInstalled": "暂无已安装的技能",
     "error": {
       "skillNotFound": "技能不存在：{{directory}}",
       "missingRepoInfo": "缺少仓库信息（owner 或 name）",

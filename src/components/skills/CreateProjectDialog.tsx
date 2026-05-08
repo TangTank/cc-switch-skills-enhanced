@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FolderOpen, Loader2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -160,6 +160,20 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
     setCustomError("");
     onClose();
   };
+
+  // 当对话框打开时重置状态
+  useEffect(() => {
+    if (open) {
+      setName("");
+      setPath("");
+      setDotDirs([]);
+      setSelectedTools([]);
+      setExtraChips([]);
+      setCustomConfigDir("");
+      setCustomSkillsDir("skills");
+      setCustomError("");
+    }
+  }, [open]);
 
   const canConfirm = name.trim() && path.trim() && selectedTools.length > 0 && !isLoading;
 

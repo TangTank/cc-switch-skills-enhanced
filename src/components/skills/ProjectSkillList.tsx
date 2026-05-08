@@ -24,7 +24,7 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
 }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "applied" | "unapplied">("all");
+  const [filter, setFilter] = useState<"all" | "applied" | "notApplied">("all");
 
   const filtered = skills.filter((skill) => {
     const matchesSearch =
@@ -36,7 +36,7 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
     const matchesFilter =
       filter === "all" ||
       (filter === "applied" && isApplied) ||
-      (filter === "unapplied" && !isApplied);
+      (filter === "notApplied" && !isApplied);
 
     return matchesSearch && matchesFilter;
   });
@@ -55,7 +55,7 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
           />
         </div>
         <div className="inline-flex gap-1 rounded-md border border-border-default bg-background p-1 shrink-0">
-          {(["all", "applied", "unapplied"] as const).map((f) => (
+          {(["all", "applied", "notApplied"] as const).map((f) => (
             <button
               key={f}
               type="button"
@@ -90,8 +90,9 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
               return (
                 <div
                   key={skill.id}
+                  onClick={() => (isApplied ? onRemove(skill.id) : onApply(skill.id))}
                   className={cn(
-                    "group flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors",
+                    "group flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors cursor-pointer",
                     index !== filtered.length - 1 &&
                       "border-b border-border-default",
                   )}
@@ -143,7 +144,10 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => onRemove(skill.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemove(skill.id);
+                        }}
                       >
                         {t("skills.project.remove")}
                       </Button>
@@ -153,7 +157,10 @@ export const ProjectSkillList: React.FC<ProjectSkillListProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10"
-                        onClick={() => onApply(skill.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onApply(skill.id);
+                        }}
                       >
                         {t("skills.project.apply")}
                       </Button>

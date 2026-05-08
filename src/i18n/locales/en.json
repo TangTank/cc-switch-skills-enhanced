@@ -1788,6 +1788,9 @@
     "updateAll": "Update All ({{count}})",
     "updatingAll": "Updating...",
     "updateAllSuccess": "Successfully updated {{count}} skill(s)",
+    "searchPlaceholder": "Search skills...",
+    "noResults": "No matching skills found",
+    "noInstalled": "No installed skills yet",
     "error": {
       "skillNotFound": "Skill not found: {{directory}}",
       "missingRepoInfo": "Missing repository info (owner or name)",
